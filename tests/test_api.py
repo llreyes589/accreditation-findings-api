@@ -51,3 +51,25 @@ def test_quality_report():
         "inspection_date": 1,
         "corrective_action_days": 1
     }
+
+def test_open_high_findings_filters_by_institution():
+    response = client.get(
+        "/findings/open-high",
+        params={"institution": "hospital alpha"}
+    )
+
+    assert response.status_code == 200
+
+    findings = response.json()
+
+    assert len(findings) == 1
+    assert findings[0]["finding_id"] == "F-001"
+    assert findings[0]["institution"] == "Hospital Alpha"
+
+def test_open_high_findings_rejects_short_institution_filter():
+    response = client.get(
+        "/findings/open-high",
+        params={"institution": "A"}
+    )
+
+    assert response.status_code == 422

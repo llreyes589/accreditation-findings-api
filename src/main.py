@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 
 from src.data_pipeline import (
     clean_findings,
@@ -63,10 +63,23 @@ def get_findings_summary():
     }
 
 @app.get("/findings/open-high", response_model=list[FindingResponse])
-def get_open_high_findings_endpoint():
+def get_open_high_findings_endpoint(institution: str | None = Query(
+    default=None,
+    min_length=2,
+    description="Optional institution name filter."
+)):
     """Return valid findings that are both high severity and open."""
     _, _, valid_df = get_processed_data()
     open_high_df = get_open_high_findings(valid_df)
+
+    if institution:
+        normalized_institution = institution.strip().casefold()
+
+        open_high_df = open_high_df[
+            open_high_df["institution"]
+            .str.casefold()
+            .str.contains(normalized_institution, na=False)
+        ]
 
     return open_high_df.to_dict(orient="records")
 
