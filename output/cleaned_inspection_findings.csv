@@ -1,0 +1,9 @@
+finding_id,institution,inspection_date,category,severity,status,corrective_action_days
+F-001,Hospital Alpha,2026-01-15,Documentation,High,Open,30.0
+F-002,Clinic Bravo,2026-01-20,Facilities,Medium,Closed,14.0
+F-003,Hospital Alpha,2026-02-05,Personnel,Low,Closed,7.0
+F-004,Laboratory Charlie,2026-02-10,Documentation,High,Open,30.0
+F-005,Clinic Delta,2026-02-18,Equipment,Medium,In Progress,21.0
+F-006,Hospital Echo,2026-03-02,Documentation,High,Open,45.0
+F-007,Clinic Foxtrot,2026-03-10,Facilities,Low,Closed,10.0
+F-008,Laboratory Golf,2026-03-15,Personnel,Medium,In Progress,14.0
