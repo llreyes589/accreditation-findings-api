@@ -33,6 +33,7 @@ def create_sample_dataframe() -> pd.DataFrame:
             "severity": [" high ", "LOW", "High", "Medium"],
             "status": [" open ", "Closed", "Open", "In Progress"],
             "corrective_action_days": [30, 14, 30, None],
+            "risk_level": ["High", "Low", "High", "Medium"],            
         }
     )
 

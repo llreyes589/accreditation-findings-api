@@ -10,6 +10,7 @@ REQUIRED_COLUMNS = [
     "severity",
     "status",
     "corrective_action_days",
+    "risk_level",
 ]
 
 class DataQualityError(ValueError):
@@ -39,6 +40,12 @@ def clean_findings(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     cleaned_df["corrective_action_days"] = pd.to_numeric(cleaned_df["corrective_action_days"], errors="coerce")
+
+    cleaned_df["risk_level"] = (
+        cleaned_df["risk_level"]
+        .str.strip()
+        .str.title()
+    )    
 
     return cleaned_df
 
