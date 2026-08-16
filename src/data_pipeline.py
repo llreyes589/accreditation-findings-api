@@ -102,4 +102,4 @@ def validate_data_quality(
         )
 
     if errors:
-        raise DataQualityError("; ".join(errors))
+        raise DataQualityError("; ".join(errors))   
