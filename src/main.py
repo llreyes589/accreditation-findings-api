@@ -10,6 +10,13 @@ from src.data_pipeline import (
     load_and_validate_csv
 )
 
+from src.schemas import (
+    DataQualityReportResponse,
+    FindingResponse,
+    FindingsSummaryResponse,
+    HealthResponse
+)
+
 app = FastAPI(
     title="Accreditation Findings API",
     description="A starter API for validated accreditation inspection findings.",
@@ -40,12 +47,12 @@ def get_processed_data():
             detail=str(error)
         )
 
-@app.get("/health")
+@app.get("/health", response_model=HealthResponse)
 def health_check():
     """Return a simple service health response."""
     return {"status": "ok"}
 
-@app.get("/findings/summary")
+@app.get("/findings/summary", response_model=FindingsSummaryResponse)
 def get_findings_summary():
     """Return record counts before and after validation."""
     raw_df, _, valid_df = get_processed_data()    
@@ -55,7 +62,7 @@ def get_findings_summary():
         "valid_records": len(valid_df)
     }
 
-@app.get("/findings/open-high")
+@app.get("/findings/open-high", response_model=list[FindingResponse])
 def get_open_high_findings_endpoint():
     """Return valid findings that are both high severity and open."""
     _, _, valid_df = get_processed_data()
@@ -63,7 +70,7 @@ def get_open_high_findings_endpoint():
 
     return open_high_df.to_dict(orient="records")
 
-@app.get("/findings/quality-report")
+@app.get("/findings/quality-report", response_model=DataQualityReportResponse)
 def get_quality_report():
     """Return data-quality metrics for the cleaned raw dataset."""
     _, cleaned_df, _ = get_processed_data()

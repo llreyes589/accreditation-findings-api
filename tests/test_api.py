@@ -32,3 +32,22 @@ def test_open_high_findings():
         "F-004",
         "F-006",
     ]
+    assert findings[0]["institution"] == "Hospital Alpha"
+    assert findings[0]["inspection_date"] == "2026-01-15T00:00:00"
+    assert findings[0]["corrective_action_days"] == 30.0
+
+def test_quality_report():
+    response = client.get("/findings/quality-report")
+
+    assert response.status_code == 200
+
+    report = response.json()
+
+    assert report["total_rows"] == 12
+    assert report["duplicate_finding_id_count"] == 1
+    assert report["invalid_inspection_date_count"] == 1
+    assert report["missing_values"] == {
+        "institution": 1,
+        "inspection_date": 1,
+        "corrective_action_days": 1
+    }
