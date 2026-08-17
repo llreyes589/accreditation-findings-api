@@ -73,3 +73,40 @@ def test_open_high_findings_rejects_short_institution_filter():
     )
 
     assert response.status_code == 422
+
+def test_risk_level_prediction():
+    response = client.post(
+        "/predictions/risk-level",
+        json={
+            "category": "Documentation",
+            "corrective_action_days": 35
+        }
+    )
+
+    assert response.status_code == 200
+
+    prediction = response.json()
+
+    assert prediction["category"] == "Documentation"
+    assert prediction["corrective_action_days"] == 35.0
+    assert prediction["predicted_risk_level"] in {
+        "High",
+        "Low",
+        "Medium"
+    }
+    assert set(prediction["probabilities"]) == {
+        "High",
+        "Low",
+        "Medium"
+    }
+
+def test_risk_level_prediction_rejects_invalid_input():
+    response = client.post(
+        "/predictions/risk-level",
+        json={
+            "category": "A",
+            "corrective_action_days": 0
+        }
+    )
+
+    assert response.status_code == 422

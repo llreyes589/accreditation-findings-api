@@ -10,11 +10,15 @@ from src.data_pipeline import (
     load_and_validate_csv
 )
 
+from src.predict import predict_risk_level
+
 from src.schemas import (
     DataQualityReportResponse,
     FindingResponse,
     FindingsSummaryResponse,
-    HealthResponse
+    HealthResponse,
+    RiskPredictionRequest,
+    RiskPredictionResponse
 )
 
 app = FastAPI(
@@ -89,3 +93,23 @@ def get_quality_report():
     _, cleaned_df, _ = get_processed_data()
 
     return get_data_quality_report(cleaned_df)
+
+@app.post(
+    "/predictions/risk-level",
+    response_model=RiskPredictionResponse
+)
+def predict_risk_level_endpoint(
+    prediction_request: RiskPredictionRequest
+):
+    """Predict a risk level from a finding category and action duration."""
+    try:
+        return predict_risk_level(
+            category=prediction_request.category,
+            corrective_action_days=prediction_request.corrective_action_days
+        )
+
+    except FileNotFoundError as error:
+        raise HTTPException(
+            status_code=503,
+            detail=str(error)
+        ) from error
